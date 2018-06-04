@@ -5,10 +5,10 @@
 #define IN 1
 #define OUT 0
 
-/* horizontal histogram of input word counts. */
+/* vertical histogram of input word counts. */
 int main()
 {
-    int state, nc, len, c, i;
+    int state, nc, len, c, i, j;
     int maxvalue;               //max value in wordlen[]
     int overflow;               //number of words > MAXWORD
     int wordlen[MAXWORD];
@@ -41,32 +41,38 @@ int main()
         else                        //inside a word
             nc++;
     }
-	
-	if(nc > 0)              //there was a word just before EOF
+    
+    if(nc > 0)              //there was a word just before EOF
         if(nc < MAXWORD)
             wordlen[nc]++;
         else
             overflow++;
-
+    
     maxvalue = 0;
     for(i = 1; i < MAXWORD; i++)
         if(wordlen[i] > maxvalue)
             maxvalue = wordlen[i];
-
-    //print histogram
+    
     for(i = 1; i < MAXWORD; i++)
+        wordlen[i] = (wordlen[i]*MAXHIST)/maxvalue;
+    
+    //print histogram
+    for(i = MAXHIST; i > 0; i--)
     {
-        len = wordlen[i]*MAXHIST/maxvalue;      //normalize to MAXHIST
-
-        printf("%2d  ", i);
-        while(len--)
-            printf("* ");
+        for(j = 1; j < MAXWORD; j++)
+            if(wordlen[j] >= i)
+                printf(" * ");
+            else
+                printf("   ");
 
         putchar('\n');
     }
-
+    
+    for(i = 1; i < MAXWORD; i++)
+        printf(" %-2d", i);
+    
     if(overflow > 0)
-        printf("\nThere are %d words >= %d\n", overflow, MAXWORD);
+        printf("\n\nThere are %d words >= %d\n", overflow, MAXWORD);
 
     return 0;
 }

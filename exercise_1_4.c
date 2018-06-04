@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-/* Convert Celcius to Fahrenheit */
+/* Convert Celsius to Fahrenheit */
 int main()
 {
     float fahr, celsius;
